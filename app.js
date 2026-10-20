@@ -1,45 +1,48 @@
 
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
+
+const filePath = path.join(__dirname, 'message.txt');
 
 const server = http.createServer((req, res) => {
-    const url = req.url;
-    const method = req.method;
 
-    if (url === '/') {
+if (req.url === '/' && req.method === 'GET') {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        const messages = err ? [] : data.split('\n').filter(msg => msg.trim() !== '');
+
         res.setHeader('Content-Type', 'text/html');
 
         res.end(`
+            <h2>Messages</h2>
+            ${messages.reverse().map(msg => `<p>${msg}</p>`).join('')}
+
             <form action="/message" method="POST">
                 <label>Name:</label>
-                <input type="text" name="username" required>
+                <input type="text" name="message" required>
                 <button type="submit">Add</button>
             </form>
         `);
-    }
+    });
+}
 
-    else if (url === '/message' && method === 'POST') {
-        let dataChunk = [];
+    else if (req.url === '/message' && req.method === 'POST') {
+        let chunks = [];
 
-        req.on('data', (chunks) => {
-            dataChunk.push(chunks);
+        req.on('data', chunk => {
+            chunks.push(chunk);
         });
 
         req.on('end', () => {
-            const combinedBuffer = Buffer.concat(dataChunk);
-            const body = combinedBuffer.toString();
+            const body = Buffer.concat(chunks).toString();
+            const message = new URLSearchParams(body).get('message');
 
-            const username = new URLSearchParams(body).get('username');
-
-            // Write the submitted name to a file
-            fs.writeFile('message.txt', username + '\n', { flag: 'a' }, (err) => {
+            fs.writeFile(filePath, message + '\n', { flag: 'a' }, err => {
                 if (err) {
                     res.statusCode = 500;
-                    res.end('Error writing to file');
-                    return;
+                    return res.end('Error writing to file');
                 }
 
-                // Redirect with HTTP 302
                 res.statusCode = 302;
                 res.setHeader('Location', '/');
                 res.end();
@@ -53,8 +56,6 @@ const server = http.createServer((req, res) => {
     }
 });
 
-const port = 3001;
-
-server.listen(port, () => {
-    console.log('Server is running at http://localhost:3001');
+server.listen(3001, () => {
+    console.log('Server running at http://localhost:3001');
 });
