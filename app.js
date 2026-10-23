@@ -2,20 +2,24 @@
 const express = require("express");
 const app = express();
 
-app.get("/orders", (req, res) => {
-    res.send("Here is the list of all orders.");
+app.get("/" ,(req, res) => {
+    res.send("welcome to express"); 
 });
 
-app.post("/orders", (req, res) => {
-    res.send("A new order has been created.");
+app.get("/products", (req, res) => {
+    res.send("Here is the list of all products.");
 });
 
-app.get("/users", (req, res) => {
-    res.send("Here is the list of all users.");
+app.post("/products", (req, res) => {
+    res.send("A new Product has been created.");
 });
 
-app.post("/users", (req, res) => {
-    res.send("A new user has been added.");
+app.get("/categories", (req, res) => {
+    res.send("Here is the list of all categories.");
+});
+
+app.post("/categories", (req, res) => {
+    res.send("A new catergory has been added.");
 });
 
 app.listen(3000, () => {
