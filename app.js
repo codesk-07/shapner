@@ -15,12 +15,15 @@ app.post("/products", (req, res) => {
 });
 
 app.get("/categories", (req, res) => {
-    res.send("Here is the list of all categories.");
+    res.send("Here is the list of all categories.");s
 });
 
 app.post("/categories", (req, res) => {
     res.send("A new catergory has been added.");
 });
+app.use( (req, res)=>{
+    res.status(404).send('<h1>404 - Page Not Found</h1>');
+})
 
 app.listen(3000, () => {
     console.log("Server is running on http://localhost:3000");
