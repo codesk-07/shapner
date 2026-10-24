@@ -1,13 +1,15 @@
+
 const express = require("express");
 const app = express();
 
-const userRouter = require("./Route/users");
-app.use(userRouter);
+// Middleware to read JSON request bodies
+app.use(express.json());
 
-const orderRouter = require("./Route/order");
-app.use(orderRouter);
+// Import and use the books router
+const booksRouter = require("./Route/books");
+app.use(booksRouter);
 
-// Keep this AFTER all routers
+// 404 handler
 app.use((req, res) => {
     res.status(404).send("<h1>404 - Page Not Found</h1>");
 });
