@@ -1,24 +1,17 @@
-const express= require( 'express');
+const express = require("express");
 const app = express();
 
-app.use((req, res , next)=>{
-    console.log(`${req.method} request is made with ${req.url}`);
-})
-app.get('/products' ,(req, res)=>{
-    res.send( "here is  lisit of prducts");
+const userRouter = require("./Route/users");
+app.use(userRouter);
+
+const orderRouter = require("./Route/order");
+app.use(orderRouter);
+
+// Keep this AFTER all routers
+app.use((req, res) => {
+    res.status(404).send("<h1>404 - Page Not Found</h1>");
 });
-app.post ('/products' , (req , res) =>{
-    res.send( " A new product is added");
+
+app.listen(3000, () => {
+    console.log("Server is running on http://localhost:3000");
 });
-app.get('/categories', (req, res)=>{
-    res.send( " Here is lisit of categories");
-});
-app.post('/categories' , (req ,res)=>{
-    res.send( "A new category is added");
-});
-app.use ( ( req , res)=>{
-    res.status(404).send("<h1>404 - Page not found</h1>");
-});
-app.listen(4000, (req , res)=>{
-    console.log( "server is runnning on http://localhost:4000")
-})
