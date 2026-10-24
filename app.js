@@ -1,36 +1,24 @@
-
-const express = require("express");
+const express= require( 'express');
 const app = express();
 
-app.get("/" ,(req, res) => {
-    res.send("welcome to express"); 
-});
-
-// app.get("/products", (req, res) => {
-//     res.send("Here is the list of all products.");
-// });
-
-// app.post("/products", (req, res) => {
-//     res.send("A new Product has been created.");
-// });
-
-// app.get("/categories", (req, res) => {
-//     res.send("Here is the list of all categories.");s
-// });
-
-// app.post("/categories", (req, res) => {
-//     res.send("A new catergory has been added.");
-// });
-// app.use( (req, res)=>{
-//     res.status(404).send('<h1>404 - Page Not Found</h1>');
-// })
-
-app.get("/welcome/:userid", (req, res)=>{
-    const id= req.params.userid;
-    const name = req.query.name;
-    const role = req.query.role;
-    res.send( `helo my name is ${name} is & my role is ${role}`);
+app.use((req, res , next)=>{
+    console.log(`${req.method} request is made with ${req.url}`);
 })
-app.listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+app.get('/products' ,(req, res)=>{
+    res.send( "here is  lisit of prducts");
 });
+app.post ('/products' , (req , res) =>{
+    res.send( " A new product is added");
+});
+app.get('/categories', (req, res)=>{
+    res.send( " Here is lisit of categories");
+});
+app.post('/categories' , (req ,res)=>{
+    res.send( "A new category is added");
+});
+app.use ( ( req , res)=>{
+    res.status(404).send("<h1>404 - Page not found</h1>");
+});
+app.listen(4000, (req , res)=>{
+    console.log( "server is runnning on http://localhost:4000")
+})
